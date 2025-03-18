@@ -1,0 +1,31 @@
+name: Deploy HTML to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # Este workflow se ejecutará solo cuando haya cambios en la rama 'main'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Esto usa un sistema operativo Ubuntu para ejecutar el flujo de trabajo
+
+    steps:
+      # Paso 1: Hacer checkout del repositorio
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Paso 2: Configurar Git para poder hacer commit en la rama gh-pages
+      - name: Set up Git
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      # Paso 3: Crear una rama gh-pages y subir los archivos HTML
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./  # Aquí no se requiere un directorio como ./dist si es solo HTML en la raíz
+          keep_files: false  # No mantener archivos previos en la rama gh-pages
+
+
